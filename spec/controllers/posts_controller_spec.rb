@@ -1,29 +1,24 @@
+# spec/controllers/posts_controller_spec.rb
 require 'rails_helper'
 
 RSpec.describe PostsController, type: :controller do
   describe 'POST #create' do
-    context 'with valid parameters' do
+    context 'with valid attributes' do
       it 'creates a new post' do
+        post_params = FactoryBot.attributes_for(:post)
         expect {
-          post :create, params: { post: { title: 'Test Title', description: 'Test Description' } }
+          post :create, params: { post: post_params }
         }.to change(Post, :count).by(1)
-      end
-
-      it 'returns a successful response' do
-        post :create, params: { post: { title: 'Test Title', description: 'Test Description' } }
         expect(response).to have_http_status(:ok)
       end
     end
 
-    context 'with invalid parameters' do
+    context 'with invalid attributes' do
       it 'does not create a new post' do
+        post_params = { title: '', description: '' } # Invalid attributes
         expect {
-          post :create, params: { post: { title: nil, description: 'Test Description' } }
-        }.not_to change(Post, :count)
-      end
-
-      it 'returns unprocessable_entity status' do
-        post :create, params: { post: { title: nil, description: 'Test Description' } }
+          post :create, params: { post: post_params }
+        }.to_not change(Post, :count)
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -31,14 +26,10 @@ RSpec.describe PostsController, type: :controller do
 
   describe 'GET #index' do
     it 'returns a list of posts' do
-      # Create posts directly in the database
-      Post.create(title: 'Title 1', description: 'Description 1')
-      Post.create(title: 'Title 2', description: 'Description 2')
-      Post.create(title: 'Title 3', description: 'Description 3')
-
+      create_list(:post, 3)
       get :index
       expect(response).to have_http_status(:ok)
-      expect(assigns(:posts).count).to eq(3)
+      expect(JSON.parse(response.body).size).to eq(3)
     end
   end
 end

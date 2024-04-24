@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
   
-  def create 
-    post = Post.new(permitted_params)
+  def create
+    user = User.find_by(id: permitted_params[:user_id].to_i)
+    post = user.posts.new(permitted_params.except(:user_id))
     if post.save
       render json: post, status: :ok
     else
@@ -17,6 +18,6 @@ class PostsController < ApplicationController
   private
 
   def permitted_params
-    params.require(:post).permit(:title, :description)
+    params.require(:post).permit(:user_id, :title, :description)
   end
 end

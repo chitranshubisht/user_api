@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "2.7.8"
+ruby "3.2.2"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
@@ -10,6 +10,10 @@ gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+
+gem 'jwt'
+
+gem 'bcrypt'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
@@ -41,10 +45,11 @@ group :development, :test do
   gem 'byebug'
   gem 'rspec-rails'
   gem 'rspec'
-  gem 'factory_bot'
+gem 'factory_bot_rails'
   gem 'capybara'
   gem 'shoulda-matchers'
   gem 'capybara'
+  gem 'faker'
 end
 
 group :development do

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-    resources :users, only: [:index, :show] do
-      resources :posts, only: [:index, :show, :create]
-    end
+  resources :posts, only: %i[index create]
+  resources :users, only: %i[index create]
+  post '/auth/login', to: 'authentication#login'
 end
