@@ -55,10 +55,10 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: user_api_test
-  username: user_api
+  database: <%= ENV['TEST_USER_DATABASE'] %>
+  username: <%= ENV['TEST_USER_NAME'] %>
   # The password associated with the PostgreSQL role (username).
-  password: user_api
+  password: <%= ENV['TEST_USER_PASSWORD']%>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
