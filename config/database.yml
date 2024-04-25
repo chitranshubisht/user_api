@@ -21,7 +21,7 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV['USER_DATABASE'] %>
+  database: user_api_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -55,7 +55,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: <%= ENV['TEST_USER_DATABASE'] %>
+  database: user_api_test
   username: <%= ENV['TEST_USER_NAME'] %>
   # The password associated with the PostgreSQL role (username).
   password: <%= ENV['TEST_USER_PASSWORD']%>
