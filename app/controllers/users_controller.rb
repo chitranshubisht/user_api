@@ -9,9 +9,8 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
-    users = { users: ActiveModelSerializers::SerializableResource.new(@users.all, each_serializer: UserSerializer) }
-    render json: { data: users }, status: :ok
+    users = User.all
+    render json: users, each_serializer: UserSerializer
   end
 
   private

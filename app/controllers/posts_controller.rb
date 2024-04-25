@@ -1,6 +1,5 @@
 class PostsController < ApplicationController
-  
-  def create 
+  def create
     post = Post.new(permitted_params)
     if post.save
       render json: post, status: :ok
@@ -8,10 +7,10 @@ class PostsController < ApplicationController
       render json: post.errors, status: :unprocessable_entity
     end
   end
-  
+
   def index
     posts = Post.all
-    render json: posts
+    render json: posts, each_serializer: PostsController
   end
 
   private
