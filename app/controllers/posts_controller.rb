@@ -9,8 +9,8 @@ class PostsController < ApplicationController
   end
 
   def index
-    posts = Post.all
-    render json: posts, each_serializer: PostsController
+    posts = Post.includes(:user)
+    render json: posts.to_json(include: :user)
   end
 
   private

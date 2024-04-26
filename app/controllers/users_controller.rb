@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  
   def create
     user = User.new(permitted_params)
     if user.save
@@ -9,8 +10,8 @@ class UsersController < ApplicationController
   end
 
   def index
-    users = User.all
-    render json: users, each_serializer: UserSerializer
+    users = User.includes(:posts)
+    render json: users.to_json(include: :posts)
   end
 
   private
