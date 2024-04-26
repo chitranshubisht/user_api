@@ -10,7 +10,7 @@ class PostsController < ApplicationController
 
   def index
     posts = Post.includes(:user)
-    render json: posts.to_json(include: :user)
+    render json: posts
   end
 
   private

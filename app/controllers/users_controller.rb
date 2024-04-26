@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  
+
   def create
     user = User.new(permitted_params)
     if user.save
@@ -11,7 +11,7 @@ class UsersController < ApplicationController
 
   def index
     users = User.includes(:posts)
-    render json: users.to_json(include: :posts)
+    render json: users
   end
 
   private
