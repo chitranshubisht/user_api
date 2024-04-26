@@ -1,34 +1,36 @@
-# spec/controllers/posts_controller_spec.rb
-require 'rails_helper'
-
 RSpec.describe PostsController, type: :controller do
+  let(:user) { create(:user) }
+  let(:valid_attributes) { create(:post) }
+  let(:invalid_attributes) { { title: '' } }
+
+  before do
+    allow(JwtToken).to receive(:jwt_decode).and_return(token)
+  end
+
   describe 'POST #create' do
     context 'with valid attributes' do
-      it 'creates a new post' do
-        post_params = FactoryBot.attributes_for(:post)
-        expect {
-          post :create, params: { post: post_params }
-        }.to change(Post, :count).by(1)
-        expect(response).to have_http_status(:ok)
+      it 'creates a new Post' do
+        post :create, params: { post: valid_attributes }, session: { user: }
+        expect(response.status).to eq(200)
+        expect(response.body).to eq(Post.last.to_json)
       end
     end
 
     context 'with invalid attributes' do
-      it 'does not create a new post' do
-        post_params = { title: '', description: '' } # Invalid attributes
-        expect {
-          post :create, params: { post: post_params }
-        }.to_not change(Post, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+      it "doesn't create a new Post" do
+        post :create, params: { post: invalid_attributes }, session: { user: }
+        expect(response.status).to eq(422)
+        expect(response.body).to include("title can't be blank")
       end
     end
   end
 
   describe 'GET #index' do
+    before { FactoryBot.create_list(:post, 3, user:) }
+
     it 'returns a list of posts' do
-      create_list(:post, 3)
       get :index
-      expect(response).to have_http_status(:ok)
+      expect(response.status).to eq(200)
       expect(JSON.parse(response.body).size).to eq(3)
     end
   end

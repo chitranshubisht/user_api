@@ -9,13 +9,13 @@ class PostsController < ApplicationController
   end
 
   def index
-    posts = Post.all
+    posts = Post.includes(:user)
     render json: posts
   end
 
   private
 
   def permitted_params
-    params.require(:post).permit(:user_id, :title, :description)
+    params.require(:post).permit(:title, :description, :user_id)
   end
 end

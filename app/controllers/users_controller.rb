@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :authenticate_user, only: [:create]
-  before_action :find_user, only: %i[show]
+  before_action :find_user
 
   def create
     user = User.new(permitted_params)
@@ -12,7 +11,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    users = User.all
+    users = User.includes(:posts)
     render json: users
   end
 
@@ -21,18 +20,20 @@ class UsersController < ApplicationController
   end
 
   def update
-    return if @user.update(permitted_params)
-
-    render json: { errors: @user.errors.full_messages }, status: :service_unavailable
+    if @user.update(permitted_params)
+      render json: @user, status: :ok
+    else
+      render json: { errors: @user.errors.full_messages }, status: :service_unavailable
+    end
   end
 
   private
 
   def permitted_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :email, :password)
   end
 
   def find_user
-    @user = User.find_by(params[:id])
+    @user = User.find(params[:id])
   end
 end
