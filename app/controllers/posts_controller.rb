@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  include JwtToken
   def create
     post = Post.new(permitted_params)
     if post.save
