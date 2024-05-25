@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  
   def create
     post = Post.new(permitted_params)
     if post.save

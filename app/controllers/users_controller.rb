@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :find_user
+  include JwtToken
+  before_action :find_user, only: %i[show update]
 
   def create
     user = User.new(permitted_params)
@@ -35,5 +36,7 @@ class UsersController < ApplicationController
 
   def find_user
     @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: 'Record not found' }, status: :not_found
   end
 end
