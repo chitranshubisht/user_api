@@ -13,6 +13,13 @@ gem 'puma', '>= 5.0'
 
 gem 'active_model_serializers'
 
+gem 'activeadmin'
+
+gem 'devise'
+
+gem 'sassc-rails'
+
+# gem 'sprockets-rails'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
@@ -39,10 +46,13 @@ gem 'bootsnap', require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem 'bcrypt'
   gem 'byebug'
   gem 'debug', platforms: %i[mri mswin mswin64 mingw x64_mingw]
   gem 'dotenv-rails'
-  gem 'factory_bot'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'jwt'
   gem 'rspec'
   gem 'rspec-rails'
   gem 'shoulda-matchers'

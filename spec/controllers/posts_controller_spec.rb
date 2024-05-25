@@ -1,44 +1,37 @@
-require 'rails_helper'
-
 RSpec.describe PostsController, type: :controller do
-  describe 'POST #create' do
-    context 'with valid parameters' do
-      it 'creates a new post' do
-        expect {
-          post :create, params: { post: { title: 'Test Title', description: 'Test Description' } }
-        }.to change(Post, :count).by(1)
-      end
+  let(:user) { create(:user) }
+  let(:valid_attributes) { create(:post) }
+  let(:invalid_attributes) { { title: '' } }
 
-      it 'returns a successful response' do
-        post :create, params: { post: { title: 'Test Title', description: 'Test Description' } }
-        expect(response).to have_http_status(:ok)
+  before do
+    allow(JwtToken).to receive(:jwt_decode).and_return(token)
+  end
+
+  describe 'POST #create' do
+    context 'with valid attributes' do
+      it 'creates a new Post' do
+        post :create, params: { post: valid_attributes }, session: { user: }
+        expect(response.status).to eq(200)
+        expect(response.body).to eq(Post.last.to_json)
       end
     end
 
-    context 'with invalid parameters' do
-      it 'does not create a new post' do
-        expect {
-          post :create, params: { post: { title: nil, description: 'Test Description' } }
-        }.not_to change(Post, :count)
-      end
-
-      it 'returns unprocessable_entity status' do
-        post :create, params: { post: { title: nil, description: 'Test Description' } }
-        expect(response).to have_http_status(:unprocessable_entity)
+    context 'with invalid attributes' do
+      it "doesn't create a new Post" do
+        post :create, params: { post: invalid_attributes }, session: { user: }
+        expect(response.status).to eq(422)
+        expect(response.body).to include("title can't be blank")
       end
     end
   end
 
   describe 'GET #index' do
-    it 'returns a list of posts' do
-      # Create posts directly in the database
-      Post.create(title: 'Title 1', description: 'Description 1')
-      Post.create(title: 'Title 2', description: 'Description 2')
-      Post.create(title: 'Title 3', description: 'Description 3')
+    before { FactoryBot.create_list(:post, 3, user:) }
 
+    it 'returns a list of posts' do
       get :index
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:posts).count).to eq(3)
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body).size).to eq(3)
     end
   end
 end
